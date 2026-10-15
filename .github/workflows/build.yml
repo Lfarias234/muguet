@@ -1,0 +1,36 @@
+yaml
+name: Compilar Muguet (GTA V iOS/macOS)
+
+on:
+  workflow_dispatch: # Permite que você clique em um botão para iniciar manualmente
+
+jobs:
+  build:
+    runs-on: macos-14 # Usa um servidor macOS da Apple para compilar
+    
+    steps:
+      - name: Baixar o código fonte
+        uses: actions/checkout@v4
+
+      - name: Configurar o ambiente Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios, aarch64-apple-darwin
+
+      - name: Instalar XcodeGen
+        run: brew install xcodegen
+
+      - name: Compilar o Projeto
+        run: |
+          # Adicione aqui os comandos de compilação específicos do projeto
+          # Exemplo padrão:
+          xcodegen generate
+          echo "Ambiente preparado para compilação."
+
+      - name: Salvar arquivo final
+        uses: actions/upload-artifact@v4
+        with:
+          name: muguet-compilado
+          path: |
+            *.xcodeproj
+            build/
